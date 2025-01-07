@@ -15,6 +15,10 @@ RUN poetry install --no-root
 
 RUN poetry run python script.py
 
-VOLUME ["/app/dist"]
+RUN apt-get update && apt-get install -y --no-install-recommends nginx \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-CMD ["tail", "-f", "/dev/null"]
+COPY nginx.conf /etc/nginx/nginx.conf
+
+CMD ["nginx", "-g", "daemon off;"]
